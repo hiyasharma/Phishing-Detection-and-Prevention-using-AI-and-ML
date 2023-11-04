@@ -1,0 +1,109 @@
+Code explaination-
+
+1) Libraries used
+
+1)import pandas as pd: Pandas library for data manipulation and analysis.
+2)from sklearn.feature_extraction.text import TfidfVectorizer: TF-IDF vectorizer from scikit-learn for text data transformation.
+3)from sklearn.model_selection import train_test_split: a function for splitting data into training and testing sets.
+4)from sklearn.tree import DecisionTreeClassifier: Imports the Decision Tree classifier from scikit-learn.
+5)from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score: Imports performance metrics for evaluating the model.
+
+Now converting email text data into a numerical format so that it can be used for machine learning.
+
+2) code:
+# Feature Extraction (TF-IDF Vectorization)
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+tfidf_vectorizer = TfidfVectorizer()
+X = tfidf_vectorizer.fit_transform(data['EmailText'])
+y = data['EmailType']  # '1' for phishing, '0' for legitimate 
+
+explaination:
+
+1)TfidfVectorizer: a tool that helps turn email text into numbers.
+2)tfidf_vectorizer = TfidfVectorizer(): creates a "number converter."
+3)X is where we keep those numbers for each email.
+4)tfidf_vectorizer.fit_transform(data['EmailText']):tells the converter to turn the email text in the 'EmailText' column of the dataset (variable data) into numbers and stores them in X.
+5)y is where we keep the labels (0 for legitimate, 1 for phishing) for each email.
+
+3)  code:
+# Model Development (Random Forest Classifier)
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+explaination:
+
+1)We want to build a "classifier" that can tell if an email is phishing or legitimate.
+2)The type of classifier we're using is called a "Random Forest."
+3)We need data to train and test the classifier, so we split our dataset into two parts: one for training and one for testing.
+
+4)  code:
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+explaination:
+
+This code is all about dividing your data into two parts for training and testing your machine learning model. 
+By testing the model on data it has never seen during training, we can assess how well it generalizes to new, unseen data. This evaluation helps us understand the model's performance in real-world scenarios.
+We want to train our model on a portion of the data and test it on another portion to see how well it performs.
+1)train_test_split does this split for us:
+2)X_train and y_train are the data we use to train our model (80% of the data).
+3)X_test and y_test are the data we use to test our model's performance (20% of the data).
+4)The test_size=0.2 means we're using 20% of the data for testing.
+5)random_state=42 ensures that the split is the same every time you run the code for reproducibility.
+
+
+{When you use a specific random_state value, it ensures that the random processes involved in the train-test split, model initialization, or any other randomness in the code will produce the same results every time you run the code.}
+
+5)  code:
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+explaination:
+
+We are using machine learning model called "Random forest".
+
+{Random Forest is a group of these decision-making trees, and it's used in machine learning to make predictions by combining multiple opinions. It's like a wise and diverse council of experts.}
+
+6)  code:
+from sklearn.metrics import accuracy_score
+
+explaination:
+
+we use accuracy_score to see how many predictions our model got right out of all the predictions it made.
+
+7)  code:
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Accuracy: {accuracy}")
+
+explaination:
+
+1)model.predict(X_test): This line tells the model to make predictions on the test data (X_test) to guess if emails are phishing or legitimate.
+2)accuracy_score(y_test, y_pred): It checks how many of the model's predictions match the real answers (the actual labels in y_test).
+3)print(f"Accuracy: {accuracy}"): It prints the accuracy, which is the percentage of correct predictions the model made.
+
+8)  code:
+from sklearn.metrics import confusion_matrix, classification_report
+
+# Confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:\n", cm)
+
+# Classification report
+report = classification_report(y_test, y_pred)
+print("Classification Report:\n", report)
+
+
+explaination:
+
+Confusion Matrix (cm): It's like a summary of how well your model did.
+1)It shows how many emails were correctly predicted as phishing (true positives) and how many were correctly predicted as legitimate (true negatives).
+2)It also tells you how many emails were mistakenly predicted as phishing when they weren't (false positives), and how many were mistakenly predicted as legitimate when they were actually phishing (false negatives).
+
+Classification Report (report): This provides a detailed report card for your model's performance.
+1)It includes metrics like precision (how many predicted positives were actually positive), recall (how many actual positives were found), and F1-score (a balance between precision and recall).
+2)It also gives information about support, which is the number of instances for each class.
+
+{The F1 score is a single metric that combines both precision and recall into a single value. It's particularly useful when you want to balance precision and recall, especially in situations where there is an uneven class distribution.}
+
+
